@@ -1,0 +1,18 @@
+package com.wanniu.game.common;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Inherited
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Service {}
+
+
+/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\common\Service.class
+ * Java compiler version: 8 (52.0)
+ * JD-Core Version:       1.1.3
+ */
