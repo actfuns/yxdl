@@ -3,7 +3,6 @@ package com.wanniu.game.data;
 import com.wanniu.game.data.ext.AccumulateExt;
 import com.wanniu.game.data.ext.AchievementConfigExt;
 import com.wanniu.game.data.ext.AchievementExt;
-import com.wanniu.game.data.ext.ActivityConfigExt;
 import com.wanniu.game.data.ext.ActivityExt;
 import com.wanniu.game.data.ext.AffixExt;
 import com.wanniu.game.data.ext.ArmourAttributeExt;

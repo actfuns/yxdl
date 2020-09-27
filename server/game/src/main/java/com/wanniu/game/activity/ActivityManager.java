@@ -388,7 +388,7 @@ public class ActivityManager
         return (HashMap<Integer, Integer>) this.opts.activityInfo.get(Integer.valueOf(value));
     }
 
-    public void addActivityInfo(int id, HashMap<Integer, Integer> data) {
+    public void   (int id, HashMap<Integer, Integer> data) {
         this.opts.activityInfo.put(Integer.valueOf(id), data);
     }
 

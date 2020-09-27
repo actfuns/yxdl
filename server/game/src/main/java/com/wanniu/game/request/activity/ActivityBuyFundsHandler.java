@@ -36,7 +36,7 @@ public class ActivityBuyFundsHandler
 
         Out.info(new Object[]{"购买基金，playerId=", player.getId()});
         HashMap<Integer, Integer> data = new HashMap<>();
-        player.activityManager.addActivityInfo(Const.ActivityRewardType.FOUNDATION.getValue(), data);
+        player.activityManager.addActivityInfo(Const.lActivityRewardType.FOUNDATION.getVaue(), data);
 
         ActivityCenterManager.getIntance().addFundRecord(GWorld.__SERVER_ID);
 
