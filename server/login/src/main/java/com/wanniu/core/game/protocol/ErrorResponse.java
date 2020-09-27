@@ -1,28 +1,24 @@
-/*    */ package com.wanniu.core.game.protocol;
-/*    */ 
-/*    */ import com.wanniu.login.proto.Common;
-/*    */ import java.io.IOException;
-/*    */ 
-/*    */ public class ErrorResponse
-/*    */   extends PomeloResponse
-/*    */ {
-/*    */   private String errMsg;
-/*    */   
-/*    */   public ErrorResponse(String errMsg) {
-/* 12 */     this.errMsg = errMsg;
-/*    */   }
-/*    */ 
-/*    */   
-/*    */   protected void write() throws IOException {
-/* 17 */     Common.ErrMsg.Builder err = Common.ErrMsg.newBuilder();
-/* 18 */     err.setS2CCode(500);
-/* 19 */     err.setS2CMsg(this.errMsg);
-/* 20 */     this.body.writeBytes(err.build().toByteArray());
-/*    */   }
-/*    */ }
+package com.wanniu.core.game.protocol;
+
+import com.wanniu.login.proto.Common;
+
+import java.io.IOException;
+
+public class ErrorResponse
+        extends PomeloResponse {
+    private String errMsg;
+
+    public ErrorResponse(String errMsg) {
+        this.errMsg = errMsg;
+    }
 
 
-/* Location:              D:\Yxdl\xmds-login\xmds-login.jar!\com\wanniu\core\game\protocol\ErrorResponse.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+    protected void write() throws IOException {
+        Common.ErrMsg.Builder err = Common.ErrMsg.newBuilder();
+        err.setS2CCode(500);
+        err.setS2CMsg(this.errMsg);
+        this.body.writeBytes(err.build().toByteArray());
+    }
+}
+
+

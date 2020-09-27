@@ -1,38 +1,26 @@
-/*    */ package com.wanniu.game.data;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ public class MultipleMonCO
-/*    */ {
-/*    */   public int mon_level;
-/*    */   public int mon_type;
-/*    */   public int maxHP;
-/*    */   public int attack;
-/*    */   public int def;
-/*    */   public int hit;
-/*    */   public int dodge;
-/*    */   public int crit;
-/*    */   public int resCirt;
-/*    */   
-/*    */   public int getKey() {
-/* 26 */     return this.mon_level;
-/*    */   }
-/*    */   
-/*    */   public void initProperty() {}
-/*    */   
-/*    */   public void beforeProperty() {}
-/*    */ }
+package com.wanniu.game.data;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\data\MultipleMonCO.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+public class MultipleMonCO {
+    public int mon_level;
+    public int mon_type;
+    public int maxHP;
+    public int attack;
+    public int def;
+    public int hit;
+    public int dodge;
+    public int crit;
+    public int resCirt;
+
+    public int getKey() {
+        return this.mon_level;
+    }
+
+    public void initProperty() {
+    }
+
+    public void beforeProperty() {
+    }
+}
+
+

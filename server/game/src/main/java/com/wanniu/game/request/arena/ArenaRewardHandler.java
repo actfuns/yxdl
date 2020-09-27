@@ -1,41 +1,29 @@
-/*    */ package com.wanniu.game.request.arena;
-/*    */ 
-/*    */ import com.wanniu.core.game.entity.GClientEvent;
-/*    */ import com.wanniu.core.game.protocol.PomeloResponse;
-/*    */ import com.wanniu.core.tcp.protocol.Packet;
-/*    */ import com.wanniu.game.player.WNPlayer;
-/*    */ import com.wanniu.game.request.solo.SoloRequestFilter;
-/*    */ import java.io.IOException;
-/*    */ import pomelo.area.ArenaHandler;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ @GClientEvent("area.arenaHandler.arenaRewardRequest")
-/*    */ public class ArenaRewardHandler
-/*    */   extends SoloRequestFilter
-/*    */ {
-/*    */   public PomeloResponse request(final WNPlayer player) throws Exception {
-/* 24 */     return new PomeloResponse()
-/*    */       {
-/*    */         protected void write() throws IOException
-/*    */         {
-/* 28 */           ArenaHandler.ArenaRewardResponse.Builder res = ArenaHandler.ArenaRewardResponse.newBuilder();
-/* 29 */           ArenaHandler.ArenaRewardRequest req = ArenaHandler.ArenaRewardRequest.parseFrom(ArenaRewardHandler.this.pak.getRemaingBytes());
-/* 30 */           player.arenaManager.handleGetReward(req.getC2SType(), res);
-/* 31 */           this.body.writeBytes(res.build().toByteArray());
-/*    */         }
-/*    */       };
-/*    */   }
-/*    */ }
+package com.wanniu.game.request.arena;
+
+import com.wanniu.core.game.entity.GClientEvent;
+import com.wanniu.core.game.protocol.PomeloResponse;
+import com.wanniu.core.tcp.protocol.Packet;
+import com.wanniu.game.player.WNPlayer;
+import com.wanniu.game.request.solo.SoloRequestFilter;
+
+import java.io.IOException;
+
+import pomelo.area.ArenaHandler;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\request\arena\ArenaRewardHandler.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+@GClientEvent("area.arenaHandler.arenaRewardRequest")
+public class ArenaRewardHandler
+        extends SoloRequestFilter {
+    public PomeloResponse request(final WNPlayer player) throws Exception {
+        return new PomeloResponse() {
+            protected void write() throws IOException {
+                ArenaHandler.ArenaRewardResponse.Builder res = ArenaHandler.ArenaRewardResponse.newBuilder();
+                ArenaHandler.ArenaRewardRequest req = ArenaHandler.ArenaRewardRequest.parseFrom(ArenaRewardHandler.this.pak.getRemaingBytes());
+                player.arenaManager.handleGetReward(req.getC2SType(), res);
+                this.body.writeBytes(res.build().toByteArray());
+            }
+        };
+    }
+}
+
+

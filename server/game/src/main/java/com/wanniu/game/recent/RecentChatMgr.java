@@ -1,240 +1,191 @@
-/*     */ package com.wanniu.game.recent;
-/*     */ 
-/*     */ import com.wanniu.core.game.entity.GEntity;
-/*     */ import com.wanniu.core.util.DateUtil;
-/*     */ import com.wanniu.game.area.Area;
-/*     */ import com.wanniu.game.common.CommonUtil;
-/*     */ import com.wanniu.game.common.ConstsTR;
-/*     */ import com.wanniu.game.daoyou.DaoYouService;
-/*     */ import com.wanniu.game.guild.GuildUtil;
-/*     */ import com.wanniu.game.player.GlobalConfig;
-/*     */ import com.wanniu.game.player.PlayerUtil;
-/*     */ import com.wanniu.game.player.WNPlayer;
-/*     */ import com.wanniu.game.poes.GuildMemberPO;
-/*     */ import com.wanniu.game.poes.GuildPO;
-/*     */ import com.wanniu.game.poes.PlayerPO;
-/*     */ import com.wanniu.game.poes.RecentChatPO;
-/*     */ import com.wanniu.redis.PlayerPOManager;
-/*     */ import java.util.ArrayList;
-/*     */ import java.util.List;
-/*     */ import java.util.Map;
-/*     */ import pomelo.area.FriendHandler;
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ public class RecentChatMgr
-/*     */ {
-/*     */   private RecentChatPO data;
-/*  35 */   private final int MSG_MAX = 20;
-/*     */   
-/*     */   public RecentChatMgr(String playerId, RecentChatPO po) {
-/*  38 */     if (null != po) {
-/*  39 */       this.data = po;
-/*     */     } else {
-/*  41 */       this.data = new RecentChatPO();
-/*  42 */       PlayerPOManager.put(ConstsTR.playerRecentChatTR, playerId, (GEntity)this.data);
-/*     */     } 
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public RecentChatPO getData() {
-/*  52 */     return this.data;
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public void onPlayerOffline() {
-/*  59 */     checkRecentLimit();
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public void checkRecentLimit() {
-/*  66 */     if (this.data.msg.size() > GlobalConfig.Social_MaxFriendNum) {
-/*  67 */       List<Map.Entry<String, RecentChatMsg>> list = new ArrayList<>(this.data.msg.entrySet());
-/*  68 */       list.sort((o1, o2) -> (((RecentChatMsg)o1.getValue()).recentChatTime.getTime() < ((RecentChatMsg)o2.getValue()).recentChatTime.getTime()) ? 1 : -1);
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */       
-/*  73 */       for (int i = GlobalConfig.Social_MaxFriendNum; i < this.data.msg.size(); i++) {
-/*  74 */         this.data.msg.remove(((Map.Entry)list.get(i)).getKey());
-/*     */       }
-/*     */     } 
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public FriendHandler.PlayerInfo getPlayerInfo(String playerId) {
-/*  86 */     FriendHandler.PlayerInfo.Builder datas = FriendHandler.PlayerInfo.newBuilder();
-/*  87 */     FriendHandler.Position.Builder currentPos = FriendHandler.Position.newBuilder();
-/*  88 */     boolean isOnline = PlayerUtil.isOnline(playerId);
-/*  89 */     datas.setIsOnline(isOnline ? 1 : 0);
-/*     */     
-/*  91 */     if (isOnline) {
-/*  92 */       WNPlayer player = PlayerUtil.findPlayer(playerId);
-/*  93 */       if (null == player) {
-/*  94 */         return datas.build();
-/*     */       }
-/*     */       
-/*  97 */       datas.setGuildId(player.guildManager.getGuildId());
-/*  98 */       datas.setGuildName(player.guildManager.getGuildName());
-/*     */       
-/* 100 */       datas.setName(player.getName());
-/* 101 */       datas.setLevel(player.getLevel());
-/* 102 */       datas.setPro(player.getPro());
-/* 103 */       datas.setStageLevel(player.player.upLevel);
-/* 104 */       datas.setVip(0);
-/* 105 */       datas.setFightPower(CommonUtil.calFightPower(player.btlDataManager.allInflus));
-/*     */       
-/* 107 */       if (DaoYouService.getInstance().getDaoYou(playerId) != null) {
-/* 108 */         datas.setHasAlly(1);
-/*     */       }
-/* 110 */       Area area = player.getArea();
-/* 111 */       if (area != null) {
-/* 112 */         currentPos.setAreaName(area.getSceneName());
-/* 113 */         currentPos.setAreaId(area.areaId);
-/*     */       } 
-/*     */     } else {
-/* 116 */       PlayerPO player = PlayerUtil.getPlayerBaseData(playerId);
-/*     */       
-/* 118 */       if (null == player) {
-/* 119 */         return datas.build();
-/*     */       }
-/*     */       
-/* 122 */       datas.setName(player.name);
-/* 123 */       datas.setLevel(player.level);
-/* 124 */       datas.setPro(player.pro);
-/* 125 */       datas.setStageLevel(player.upLevel);
-/* 126 */       datas.setVip(0);
-/* 127 */       datas.setGuildId("");
-/* 128 */       datas.setGuildName("");
-/*     */       
-/* 130 */       GuildMemberPO myInfo = GuildUtil.getGuildMember(playerId);
-/* 131 */       if (null != myInfo) {
-/* 132 */         GuildPO myGuild = GuildUtil.getGuild(myInfo.guildId);
-/* 133 */         if (null != myGuild) {
-/* 134 */           datas.setGuildId(myGuild.id);
-/* 135 */           datas.setGuildName(myGuild.name);
-/*     */         } 
-/*     */       } 
-/*     */       
-/* 139 */       datas.setFightPower(player.fightPower);
-/*     */     } 
-/*     */     
-/* 142 */     datas.setId(playerId);
-/* 143 */     datas.setCurrentPos(currentPos.build());
-/* 144 */     return datas.build();
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public List<FriendHandler.PlayerInfo> getRecentLs() {
-/* 153 */     List<FriendHandler.PlayerInfo> ls = new ArrayList<>();
-/* 154 */     for (String key : this.data.msg.keySet()) {
-/* 155 */       FriendHandler.PlayerInfo playerInfo = getPlayerInfo(key);
-/* 156 */       if (null != playerInfo) {
-/* 157 */         ls.add(playerInfo);
-/*     */       }
-/*     */     } 
-/* 160 */     return ls;
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public void addRecentMsg(String friendId, ChatMsg msg) {
-/* 170 */     Map<String, RecentChatMsg> ls = this.data.msg;
-/* 171 */     if (!ls.containsKey(friendId)) {
-/* 172 */       RecentChatMsg recentMsg = new RecentChatMsg();
-/* 173 */       recentMsg.recentChatTime = DateUtil.format(msg.time);
-/* 174 */       recentMsg.msgLs.add(msg);
-/* 175 */       ls.put(friendId, recentMsg);
-/*     */     } else {
-/*     */       
-/* 178 */       if (((RecentChatMsg)ls.get(friendId)).msgLs.size() > 20) {
-/* 179 */         ((RecentChatMsg)ls.get(friendId)).msgLs.remove(0);
-/*     */       }
-/*     */       
-/* 182 */       ((RecentChatMsg)ls.get(friendId)).recentChatTime = DateUtil.format(msg.time);
-/* 183 */       ((RecentChatMsg)ls.get(friendId)).msgLs.add(msg);
-/*     */     } 
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public List<FriendHandler.ChatMsg> getRecentMsg(String playerId) {
-/* 197 */     List<FriendHandler.ChatMsg> ls = new ArrayList<>();
-/* 198 */     if (this.data.msg.size() < 0 || !this.data.msg.containsKey(playerId)) {
-/* 199 */       return ls;
-/*     */     }
-/*     */     
-/* 202 */     for (int i = 0; i < ((RecentChatMsg)this.data.msg.get(playerId)).msgLs.size(); i++) {
-/* 203 */       ChatMsg msg = ((RecentChatMsg)this.data.msg.get(playerId)).msgLs.get(i);
-/* 204 */       FriendHandler.ChatMsg.Builder buildMsg = FriendHandler.ChatMsg.newBuilder();
-/* 205 */       buildMsg.setS2CPlayerId(msg.playerId);
-/* 206 */       buildMsg.setS2CContent(msg.content);
-/* 207 */       buildMsg.setS2CTime(msg.time);
-/* 208 */       buildMsg.setS2CAcceptRid(msg.acceptRid);
-/* 209 */       ls.add(buildMsg.build());
-/*     */     } 
-/*     */     
-/* 212 */     return ls;
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public void removeRecentMsg(String playerId) {
-/* 221 */     if (this.data.msg.size() < 0 || !this.data.msg.containsKey(playerId)) {
-/*     */       return;
-/*     */     }
-/*     */     
-/* 225 */     this.data.msg.remove(playerId);
-/*     */   }
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */   
-/*     */   public void removeAllMsg() {
-/* 232 */     this.data.msg.clear();
-/*     */   }
-/*     */ }
+package com.wanniu.game.recent;
+
+import com.wanniu.core.game.entity.GEntity;
+import com.wanniu.core.util.DateUtil;
+import com.wanniu.game.area.Area;
+import com.wanniu.game.common.CommonUtil;
+import com.wanniu.game.common.ConstsTR;
+import com.wanniu.game.daoyou.DaoYouService;
+import com.wanniu.game.guild.GuildUtil;
+import com.wanniu.game.player.GlobalConfig;
+import com.wanniu.game.player.PlayerUtil;
+import com.wanniu.game.player.WNPlayer;
+import com.wanniu.game.poes.GuildMemberPO;
+import com.wanniu.game.poes.GuildPO;
+import com.wanniu.game.poes.PlayerPO;
+import com.wanniu.game.poes.RecentChatPO;
+import com.wanniu.redis.PlayerPOManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import pomelo.area.FriendHandler;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\recent\RecentChatMgr.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+public class RecentChatMgr {
+    private RecentChatPO data;
+    private final int MSG_MAX = 20;
+
+    public RecentChatMgr(String playerId, RecentChatPO po) {
+        if (null != po) {
+            this.data = po;
+        } else {
+            this.data = new RecentChatPO();
+            PlayerPOManager.put(ConstsTR.playerRecentChatTR, playerId, (GEntity) this.data);
+        }
+    }
+
+
+    public RecentChatPO getData() {
+        return this.data;
+    }
+
+
+    public void onPlayerOffline() {
+        checkRecentLimit();
+    }
+
+
+    public void checkRecentLimit() {
+        if (this.data.msg.size() > GlobalConfig.Social_MaxFriendNum) {
+            List<Map.Entry<String, RecentChatMsg>> list = new ArrayList<>(this.data.msg.entrySet());
+            list.sort((o1, o2) -> (((RecentChatMsg) o1.getValue()).recentChatTime.getTime() < ((RecentChatMsg) o2.getValue()).recentChatTime.getTime()) ? 1 : -1);
+
+
+            for (int i = GlobalConfig.Social_MaxFriendNum; i < this.data.msg.size(); i++) {
+                this.data.msg.remove(((Map.Entry) list.get(i)).getKey());
+            }
+        }
+    }
+
+
+    public FriendHandler.PlayerInfo getPlayerInfo(String playerId) {
+        FriendHandler.PlayerInfo.Builder datas = FriendHandler.PlayerInfo.newBuilder();
+        FriendHandler.Position.Builder currentPos = FriendHandler.Position.newBuilder();
+        boolean isOnline = PlayerUtil.isOnline(playerId);
+        datas.setIsOnline(isOnline ? 1 : 0);
+
+        if (isOnline) {
+            WNPlayer player = PlayerUtil.findPlayer(playerId);
+            if (null == player) {
+                return datas.build();
+            }
+
+            datas.setGuildId(player.guildManager.getGuildId());
+            datas.setGuildName(player.guildManager.getGuildName());
+
+            datas.setName(player.getName());
+            datas.setLevel(player.getLevel());
+            datas.setPro(player.getPro());
+            datas.setStageLevel(player.player.upLevel);
+            datas.setVip(0);
+            datas.setFightPower(CommonUtil.calFightPower(player.btlDataManager.allInflus));
+
+            if (DaoYouService.getInstance().getDaoYou(playerId) != null) {
+                datas.setHasAlly(1);
+            }
+            Area area = player.getArea();
+            if (area != null) {
+                currentPos.setAreaName(area.getSceneName());
+                currentPos.setAreaId(area.areaId);
+            }
+        } else {
+            PlayerPO player = PlayerUtil.getPlayerBaseData(playerId);
+
+            if (null == player) {
+                return datas.build();
+            }
+
+            datas.setName(player.name);
+            datas.setLevel(player.level);
+            datas.setPro(player.pro);
+            datas.setStageLevel(player.upLevel);
+            datas.setVip(0);
+            datas.setGuildId("");
+            datas.setGuildName("");
+
+            GuildMemberPO myInfo = GuildUtil.getGuildMember(playerId);
+            if (null != myInfo) {
+                GuildPO myGuild = GuildUtil.getGuild(myInfo.guildId);
+                if (null != myGuild) {
+                    datas.setGuildId(myGuild.id);
+                    datas.setGuildName(myGuild.name);
+                }
+            }
+
+            datas.setFightPower(player.fightPower);
+        }
+
+        datas.setId(playerId);
+        datas.setCurrentPos(currentPos.build());
+        return datas.build();
+    }
+
+
+    public List<FriendHandler.PlayerInfo> getRecentLs() {
+        List<FriendHandler.PlayerInfo> ls = new ArrayList<>();
+        for (String key : this.data.msg.keySet()) {
+            FriendHandler.PlayerInfo playerInfo = getPlayerInfo(key);
+            if (null != playerInfo) {
+                ls.add(playerInfo);
+            }
+        }
+        return ls;
+    }
+
+
+    public void addRecentMsg(String friendId, ChatMsg msg) {
+        Map<String, RecentChatMsg> ls = this.data.msg;
+        if (!ls.containsKey(friendId)) {
+            RecentChatMsg recentMsg = new RecentChatMsg();
+            recentMsg.recentChatTime = DateUtil.format(msg.time);
+            recentMsg.msgLs.add(msg);
+            ls.put(friendId, recentMsg);
+        } else {
+
+            if (((RecentChatMsg) ls.get(friendId)).msgLs.size() > 20) {
+                ((RecentChatMsg) ls.get(friendId)).msgLs.remove(0);
+            }
+
+            ((RecentChatMsg) ls.get(friendId)).recentChatTime = DateUtil.format(msg.time);
+            ((RecentChatMsg) ls.get(friendId)).msgLs.add(msg);
+        }
+    }
+
+
+    public List<FriendHandler.ChatMsg> getRecentMsg(String playerId) {
+        List<FriendHandler.ChatMsg> ls = new ArrayList<>();
+        if (this.data.msg.size() < 0 || !this.data.msg.containsKey(playerId)) {
+            return ls;
+        }
+
+        for (int i = 0; i < ((RecentChatMsg) this.data.msg.get(playerId)).msgLs.size(); i++) {
+            ChatMsg msg = ((RecentChatMsg) this.data.msg.get(playerId)).msgLs.get(i);
+            FriendHandler.ChatMsg.Builder buildMsg = FriendHandler.ChatMsg.newBuilder();
+            buildMsg.setS2CPlayerId(msg.playerId);
+            buildMsg.setS2CContent(msg.content);
+            buildMsg.setS2CTime(msg.time);
+            buildMsg.setS2CAcceptRid(msg.acceptRid);
+            ls.add(buildMsg.build());
+        }
+
+        return ls;
+    }
+
+
+    public void removeRecentMsg(String playerId) {
+        if (this.data.msg.size() < 0 || !this.data.msg.containsKey(playerId)) {
+            return;
+        }
+
+        this.data.msg.remove(playerId);
+    }
+
+
+    public void removeAllMsg() {
+        this.data.msg.clear();
+    }
+}
+
+

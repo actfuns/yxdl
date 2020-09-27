@@ -1,15 +1,8 @@
-/*   */ package com.wanniu.core.tcp.protocol;
-/*   */ 
-/*   */ 
-/*   */ 
-/*   */ 
-/*   */ public enum Prefix
-/*   */ {
-/* 8 */   BYTE, SHORT, INT;
-/*   */ }
+package com.wanniu.core.tcp.protocol;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\core\tcp\protocol\Prefix.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+public enum Prefix {
+    BYTE, SHORT, INT;
+}
+
+

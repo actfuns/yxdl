@@ -1,21 +1,14 @@
-/*    */ package com.wanniu.core.tcp.protocol;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ public abstract class RequestMessage
-/*    */   extends Message
-/*    */ {
-/*    */   protected long reqId;
-/*    */   
-/*    */   public long setReqId(long reqId) {
-/* 12 */     this.reqId = reqId;
-/* 13 */     return this.reqId;
-/*    */   }
-/*    */ }
+package com.wanniu.core.tcp.protocol;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\core\tcp\protocol\RequestMessage.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+public abstract class RequestMessage
+        extends Message {
+    protected long reqId;
+
+    public long setReqId(long reqId) {
+        this.reqId = reqId;
+        return this.reqId;
+    }
+}
+
+

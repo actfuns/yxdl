@@ -1,61 +1,55 @@
-/*    */ package com.wanniu.game.data.ext;
-/*    */ 
-/*    */ import com.wanniu.core.util.StringUtil;
-/*    */ import com.wanniu.game.data.DrawCO;
-/*    */ import java.util.ArrayList;
-/*    */ 
-/*    */ 
-/*    */ public class DrawExt
-/*    */   extends DrawCO
-/*    */ {
-/*    */   public ArrayList<DrawItem> items;
-/*    */   public int totalRate;
-/*    */   
-/*    */   public void initProperty() {
-/* 15 */     this.items = new ArrayList<>();
-/* 16 */     this.totalRate = 0;
-/*    */     
-/* 18 */     if (StringUtil.isEmpty(this.propLibrary)) {
-/*    */       return;
-/*    */     }
-/* 21 */     String[] items = this.propLibrary.split(";");
-/*    */     
-/* 23 */     for (String ss : items) {
-/*    */       
-/* 25 */       String[] rw = ss.split(":");
-/*    */       
-/* 27 */       DrawItem item = new DrawItem();
-/* 28 */       if (rw.length == 3) {
-/*    */ 
-/*    */         
-/* 31 */         item.itemCode = rw[0];
-/* 32 */         item.itemNum = Integer.parseInt(rw[1]);
-/* 33 */         item.itemRate = Integer.parseInt(rw[2]);
-/*    */         
-/* 35 */         this.totalRate += item.itemRate;
-/*    */       }
-/* 37 */       else if (rw.length == 2) {
-/*    */         
-/* 39 */         item.itemCode = rw[0];
-/* 40 */         item.itemNum = Integer.parseInt(rw[1]);
-/*    */       }
-/* 42 */       else if (rw.length == 1) {
-/*    */         
-/* 44 */         item.itemCode = rw[0];
-/*    */       } 
-/* 46 */       this.items.add(item);
-/*    */     } 
-/*    */   }
-/*    */   
-/*    */   public static class DrawItem {
-/*    */     public String itemCode;
-/*    */     public int itemNum;
-/*    */     public int itemRate;
-/*    */   }
-/*    */ }
+package com.wanniu.game.data.ext;
+
+import com.wanniu.core.util.StringUtil;
+import com.wanniu.game.data.DrawCO;
+
+import java.util.ArrayList;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\data\ext\DrawExt.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+public class DrawExt
+        extends DrawCO {
+    public ArrayList<DrawItem> items;
+    public int totalRate;
+
+    public void initProperty() {
+        this.items = new ArrayList<>();
+        this.totalRate = 0;
+
+        if (StringUtil.isEmpty(this.propLibrary)) {
+            return;
+        }
+        String[] items = this.propLibrary.split(";");
+
+        for (String ss : items) {
+
+            String[] rw = ss.split(":");
+
+            DrawItem item = new DrawItem();
+            if (rw.length == 3) {
+
+
+                item.itemCode = rw[0];
+                item.itemNum = Integer.parseInt(rw[1]);
+                item.itemRate = Integer.parseInt(rw[2]);
+
+                this.totalRate += item.itemRate;
+            } else if (rw.length == 2) {
+
+                item.itemCode = rw[0];
+                item.itemNum = Integer.parseInt(rw[1]);
+            } else if (rw.length == 1) {
+
+                item.itemCode = rw[0];
+            }
+            this.items.add(item);
+        }
+    }
+
+    public static class DrawItem {
+        public String itemCode;
+        public int itemNum;
+        public int itemRate;
+    }
+}
+
+

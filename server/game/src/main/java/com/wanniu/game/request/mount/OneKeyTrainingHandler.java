@@ -1,35 +1,28 @@
-/*    */ package com.wanniu.game.request.mount;
-/*    */ 
-/*    */ import com.wanniu.core.game.entity.GClientEvent;
-/*    */ import com.wanniu.core.game.entity.GPlayer;
-/*    */ import com.wanniu.core.game.protocol.PomeloRequest;
-/*    */ import com.wanniu.core.game.protocol.PomeloResponse;
-/*    */ import com.wanniu.game.player.WNPlayer;
-/*    */ import java.io.IOException;
-/*    */ import pomelo.area.MountHandler;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ @GClientEvent("area.mountHandler.oneKeyTrainingRequest")
-/*    */ public class OneKeyTrainingHandler
-/*    */   extends PomeloRequest
-/*    */ {
-/*    */   public PomeloResponse request() throws Exception {
-/* 22 */     MountHandler.OneKeyTrainingRequest req = MountHandler.OneKeyTrainingRequest.parseFrom(this.pak.getRemaingBytes());
-/* 23 */     GPlayer player = this.pak.getPlayer();
-/* 24 */     WNPlayer wPlayer = (WNPlayer)player;
-/* 25 */     return new PomeloResponse() {
-/*    */         protected void write() throws IOException {}
-/*    */       };
-/*    */   }
-/*    */ }
+package com.wanniu.game.request.mount;
+
+import com.wanniu.core.game.entity.GClientEvent;
+import com.wanniu.core.game.entity.GPlayer;
+import com.wanniu.core.game.protocol.PomeloRequest;
+import com.wanniu.core.game.protocol.PomeloResponse;
+import com.wanniu.game.player.WNPlayer;
+
+import java.io.IOException;
+
+import pomelo.area.MountHandler;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\request\mount\OneKeyTrainingHandler.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+@GClientEvent("area.mountHandler.oneKeyTrainingRequest")
+public class OneKeyTrainingHandler
+        extends PomeloRequest {
+    public PomeloResponse request() throws Exception {
+        MountHandler.OneKeyTrainingRequest req = MountHandler.OneKeyTrainingRequest.parseFrom(this.pak.getRemaingBytes());
+        GPlayer player = this.pak.getPlayer();
+        WNPlayer wPlayer = (WNPlayer) player;
+        return new PomeloResponse() {
+            protected void write() throws IOException {
+            }
+        };
+    }
+}
+
+

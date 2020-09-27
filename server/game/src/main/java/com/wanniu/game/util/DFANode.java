@@ -1,78 +1,65 @@
-/*    */ package com.wanniu.game.util;
-/*    */ 
-/*    */ import java.util.LinkedList;
-/*    */ import java.util.List;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ class DFANode
-/*    */ {
-/*    */   private int value;
-/*    */   private List<DFANode> subNodes;
-/*    */   private boolean isLast;
-/*    */   
-/*    */   public DFANode(int value, boolean isLast) {
-/* 17 */     this.value = value;
-/* 18 */     this.isLast = isLast;
-/*    */   }
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */   
-/*    */   private DFANode addSubNode(DFANode subNode) {
-/* 26 */     if (this.subNodes == null)
-/* 27 */       this.subNodes = new LinkedList<>(); 
-/* 28 */     this.subNodes.add(subNode);
-/* 29 */     return subNode;
-/*    */   }
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */   
-/*    */   public DFANode addIfNoExist(int value, boolean isLast) {
-/* 36 */     if (this.subNodes == null) {
-/* 37 */       return addSubNode(new DFANode(value, isLast));
-/*    */     }
-/* 39 */     for (DFANode subNode : this.subNodes) {
-/* 40 */       if (subNode.value == value) {
-/* 41 */         if (!subNode.isLast && isLast)
-/* 42 */           subNode.isLast = true; 
-/* 43 */         return subNode;
-/*    */       } 
-/*    */     } 
-/* 46 */     return addSubNode(new DFANode(value, isLast));
-/*    */   }
-/*    */   
-/*    */   public DFANode querySub(int value) {
-/* 50 */     if (this.subNodes == null) {
-/* 51 */       return null;
-/*    */     }
-/* 53 */     for (DFANode subNode : this.subNodes) {
-/* 54 */       if (subNode.value == value)
-/* 55 */         return subNode; 
-/*    */     } 
-/* 57 */     return null;
-/*    */   }
-/*    */   
-/*    */   public boolean isLast() {
-/* 61 */     return this.isLast;
-/*    */   }
-/*    */   
-/*    */   public void setLast(boolean isLast) {
-/* 65 */     this.isLast = isLast;
-/*    */   }
-/*    */ 
-/*    */   
-/*    */   public int hashCode() {
-/* 70 */     return this.value;
-/*    */   }
-/*    */ }
+package com.wanniu.game.util;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\gam\\util\DFANode.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+class DFANode {
+    private int value;
+    private List<DFANode> subNodes;
+    private boolean isLast;
+
+    public DFANode(int value, boolean isLast) {
+        this.value = value;
+        this.isLast = isLast;
+    }
+
+
+    private DFANode addSubNode(DFANode subNode) {
+        if (this.subNodes == null)
+            this.subNodes = new LinkedList<>();
+        this.subNodes.add(subNode);
+        return subNode;
+    }
+
+
+    public DFANode addIfNoExist(int value, boolean isLast) {
+        if (this.subNodes == null) {
+            return addSubNode(new DFANode(value, isLast));
+        }
+        for (DFANode subNode : this.subNodes) {
+            if (subNode.value == value) {
+                if (!subNode.isLast && isLast)
+                    subNode.isLast = true;
+                return subNode;
+            }
+        }
+        return addSubNode(new DFANode(value, isLast));
+    }
+
+    public DFANode querySub(int value) {
+        if (this.subNodes == null) {
+            return null;
+        }
+        for (DFANode subNode : this.subNodes) {
+            if (subNode.value == value)
+                return subNode;
+        }
+        return null;
+    }
+
+    public boolean isLast() {
+        return this.isLast;
+    }
+
+    public void setLast(boolean isLast) {
+        this.isLast = isLast;
+    }
+
+
+    public int hashCode() {
+        return this.value;
+    }
+}
+
+

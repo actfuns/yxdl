@@ -1,38 +1,27 @@
-/*    */ package com.wanniu.game.request.arena;
-/*    */ 
-/*    */ import com.wanniu.core.game.entity.GClientEvent;
-/*    */ import com.wanniu.core.game.protocol.PomeloResponse;
-/*    */ import com.wanniu.game.player.WNPlayer;
-/*    */ import com.wanniu.game.request.solo.SoloRequestFilter;
-/*    */ import java.io.IOException;
-/*    */ import pomelo.area.ArenaHandler;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ @GClientEvent("area.arenaHandler.arenaInfoRequest")
-/*    */ public class ArenaInfoHandler
-/*    */   extends SoloRequestFilter
-/*    */ {
-/*    */   public PomeloResponse request(final WNPlayer player) throws Exception {
-/* 23 */     return new PomeloResponse()
-/*    */       {
-/*    */         protected void write() throws IOException {
-/* 26 */           ArenaHandler.ArenaInfoResponse.Builder res = player.arenaManager.getArenaInfo();
-/* 27 */           res.setS2CCode(200);
-/* 28 */           this.body.writeBytes(res.build().toByteArray());
-/*    */         }
-/*    */       };
-/*    */   }
-/*    */ }
+package com.wanniu.game.request.arena;
+
+import com.wanniu.core.game.entity.GClientEvent;
+import com.wanniu.core.game.protocol.PomeloResponse;
+import com.wanniu.game.player.WNPlayer;
+import com.wanniu.game.request.solo.SoloRequestFilter;
+
+import java.io.IOException;
+
+import pomelo.area.ArenaHandler;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\request\arena\ArenaInfoHandler.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+@GClientEvent("area.arenaHandler.arenaInfoRequest")
+public class ArenaInfoHandler
+        extends SoloRequestFilter {
+    public PomeloResponse request(final WNPlayer player) throws Exception {
+        return new PomeloResponse() {
+            protected void write() throws IOException {
+                ArenaHandler.ArenaInfoResponse.Builder res = player.arenaManager.getArenaInfo();
+                res.setS2CCode(200);
+                this.body.writeBytes(res.build().toByteArray());
+            }
+        };
+    }
+}
+
+

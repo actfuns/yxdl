@@ -1,23 +1,19 @@
 package com.wanniu.game.guild.guildDungeon;
 
 public class JoinGuildDungeonResult {
-  public boolean result;
-  
-  public String info;
-  
-  public int dungeonId;
-  
-  public String guildId;
-  
-  public int maxCountDungeonId;
-  
-  public String instanceId;
-  
-  public int dungeonCount;
+    public boolean result;
+
+    public String info;
+
+    public int dungeonId;
+
+    public String guildId;
+
+    public int maxCountDungeonId;
+
+    public String instanceId;
+
+    public int dungeonCount;
 }
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\guild\guildDungeon\JoinGuildDungeonResult.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */

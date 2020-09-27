@@ -8,13 +8,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface GClientEvent {
-  String value();
-  
-  short type() default 0;
+    String value();
+
+    short type() default 0;
 }
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\core\game\entity\GClientEvent.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */

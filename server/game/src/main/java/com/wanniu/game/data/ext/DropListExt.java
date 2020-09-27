@@ -1,99 +1,75 @@
-/*    */ package com.wanniu.game.data.ext;
-/*    */ 
-/*    */ import com.wanniu.game.data.DropListCO;
-/*    */ import java.util.HashMap;
-/*    */ import java.util.Map;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ public class DropListExt
-/*    */   extends DropListCO
-/*    */ {
-/*    */   public int[] weeks;
-/*    */   public Map<String, Integer> rewardPreview;
-/*    */   public Map<String, Integer> firstRewardPreview;
-/*    */   public Map<String, Integer> weekRewardPreview;
-/*    */   
-/*    */   public void initProperty() {
-/* 37 */     String[] weeks = this.weekDay.split(",");
-/* 38 */     this.weeks = new int[weeks.length];
-/* 39 */     for (int i = 0; i < weeks.length; i++) {
-/* 40 */       this.weeks[i] = Integer.parseInt(weeks[i]);
-/* 41 */       if (this.weeks[i] == 7) {
-/* 42 */         this.weeks[i] = 1;
-/*    */       } else {
-/* 44 */         this.weeks[i] = this.weeks[i] + 1;
-/*    */       } 
-/*    */     } 
-/*    */     
-/* 48 */     String[] rewardPreviewStrs = this.itemView.split(";");
-/* 49 */     this.rewardPreview = new HashMap<>();
-/* 50 */     for (int j = 0; j < rewardPreviewStrs.length; j++) {
-/*    */       
-/* 52 */       String str = rewardPreviewStrs[j];
-/* 53 */       String[] params = str.split(":");
-/* 54 */       String code = params[0];
-/* 55 */       int count = Integer.parseInt(params[1]);
-/* 56 */       this.rewardPreview.put(code, Integer.valueOf(count));
-/*    */     } 
-/*    */ 
-/*    */     
-/* 60 */     String[] firstRewardPreviewStrs = this.firstReward.split(";");
-/* 61 */     this.firstRewardPreview = new HashMap<>();
-/* 62 */     for (int k = 0; k < rewardPreviewStrs.length; k++) {
-/*    */       
-/* 64 */       String str = firstRewardPreviewStrs[k];
-/* 65 */       String[] params = str.split(":");
-/* 66 */       String code = params[0];
-/* 67 */       int count = Integer.parseInt(params[1]);
-/* 68 */       this.firstRewardPreview.put(code, Integer.valueOf(count));
-/*    */     } 
-/*    */ 
-/*    */     
-/* 72 */     String[] weekRewardPreviewStrs = this.weekReward.split(";");
-/* 73 */     this.weekRewardPreview = new HashMap<>();
-/* 74 */     for (int m = 0; m < weekRewardPreviewStrs.length; m++) {
-/*    */       
-/* 76 */       String str = weekRewardPreviewStrs[m];
-/* 77 */       String[] params = str.split(":");
-/* 78 */       String code = params[0];
-/* 79 */       int count = Integer.parseInt(params[1]);
-/* 80 */       this.weekRewardPreview.put(code, Integer.valueOf(count));
-/*    */     } 
-/*    */   }
-/*    */ 
-/*    */   
-/*    */   public boolean isWeek(int week) {
-/* 86 */     for (int i = 0; i < this.weeks.length; i++) {
-/* 87 */       if (this.weeks[i] == week) {
-/* 88 */         return true;
-/*    */       }
-/*    */     } 
-/* 91 */     return false;
-/*    */   }
-/*    */ }
+package com.wanniu.game.data.ext;
+
+import com.wanniu.game.data.DropListCO;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\data\ext\DropListExt.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+public class DropListExt
+        extends DropListCO {
+    public int[] weeks;
+    public Map<String, Integer> rewardPreview;
+    public Map<String, Integer> firstRewardPreview;
+    public Map<String, Integer> weekRewardPreview;
+
+    public void initProperty() {
+        String[] weeks = this.weekDay.split(",");
+        this.weeks = new int[weeks.length];
+        for (int i = 0; i < weeks.length; i++) {
+            this.weeks[i] = Integer.parseInt(weeks[i]);
+            if (this.weeks[i] == 7) {
+                this.weeks[i] = 1;
+            } else {
+                this.weeks[i] = this.weeks[i] + 1;
+            }
+        }
+
+        String[] rewardPreviewStrs = this.itemView.split(";");
+        this.rewardPreview = new HashMap<>();
+        for (int j = 0; j < rewardPreviewStrs.length; j++) {
+
+            String str = rewardPreviewStrs[j];
+            String[] params = str.split(":");
+            String code = params[0];
+            int count = Integer.parseInt(params[1]);
+            this.rewardPreview.put(code, Integer.valueOf(count));
+        }
+
+
+        String[] firstRewardPreviewStrs = this.firstReward.split(";");
+        this.firstRewardPreview = new HashMap<>();
+        for (int k = 0; k < rewardPreviewStrs.length; k++) {
+
+            String str = firstRewardPreviewStrs[k];
+            String[] params = str.split(":");
+            String code = params[0];
+            int count = Integer.parseInt(params[1]);
+            this.firstRewardPreview.put(code, Integer.valueOf(count));
+        }
+
+
+        String[] weekRewardPreviewStrs = this.weekReward.split(";");
+        this.weekRewardPreview = new HashMap<>();
+        for (int m = 0; m < weekRewardPreviewStrs.length; m++) {
+
+            String str = weekRewardPreviewStrs[m];
+            String[] params = str.split(":");
+            String code = params[0];
+            int count = Integer.parseInt(params[1]);
+            this.weekRewardPreview.put(code, Integer.valueOf(count));
+        }
+    }
+
+
+    public boolean isWeek(int week) {
+        for (int i = 0; i < this.weeks.length; i++) {
+            if (this.weeks[i] == week) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+

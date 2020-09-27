@@ -1,112 +1,98 @@
-/*     */ package com.wanniu.game.request.revelry;
-/*     */ 
-/*     */ import com.wanniu.core.game.LangService;
-/*     */ import com.wanniu.core.game.entity.GClientEvent;
-/*     */ import com.wanniu.core.game.protocol.PomeloRequest;
-/*     */ import com.wanniu.core.game.protocol.PomeloResponse;
-/*     */ import com.wanniu.game.common.msg.ErrorResponse;
-/*     */ import com.wanniu.game.data.GameData;
-/*     */ import com.wanniu.game.data.KingCO;
-/*     */ import com.wanniu.game.revelry.RevelryClass;
-/*     */ import com.wanniu.game.revelry.RevelryColumn;
-/*     */ import com.wanniu.game.revelry.RevelryManager;
-/*     */ import com.wanniu.game.revelry.RevelryToday;
-/*     */ import java.io.IOException;
-/*     */ import java.util.List;
-/*     */ import java.util.Map;
-/*     */ import pomelo.revelry.ActivityRevelryHandler;
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ 
-/*     */ @GClientEvent("revelry.activityRevelryHandler.revelryGetColumnRequest")
-/*     */ public class RevelryGetColumnHandler
-/*     */   extends PomeloRequest
-/*     */ {
-/*     */   public PomeloResponse request() throws Exception {
-/*  35 */     final ActivityRevelryHandler.RevelryGetColumnResponse.Builder result = ActivityRevelryHandler.RevelryGetColumnResponse.newBuilder();
-/*     */     
-/*  37 */     List<RevelryClass> revelryClassList = RevelryManager.getInstance().getRevelryClassList();
-/*  38 */     if (revelryClassList.isEmpty()) {
-/*  39 */       return (PomeloResponse)new ErrorResponse(LangService.getValue("PARAM_ERROR"));
-/*     */     }
-/*     */ 
-/*     */     
-/*  43 */     for (RevelryClass revelryClass : revelryClassList) {
-/*  44 */       ActivityRevelryHandler.RevelryTabInfo.Builder tabInfo = ActivityRevelryHandler.RevelryTabInfo.newBuilder().setName(revelryClass.getName());
-/*     */       
-/*  46 */       int defaultSeleteIndex = 0;
-/*  47 */       long timeleft = 2147483647L;
-/*     */       
-/*  49 */       for (Map.Entry<String, RevelryToday> e : (Iterable<Map.Entry<String, RevelryToday>>)revelryClass.getTodays().entrySet()) {
-/*  50 */         ActivityRevelryHandler.RevelryTodayInfo.Builder todayInfo = ActivityRevelryHandler.RevelryTodayInfo.newBuilder().setName(((RevelryToday)e.getValue()).getName());
-/*     */ 
-/*     */         
-/*  53 */         for (RevelryColumn column : ((RevelryToday)e.getValue()).getColumns()) {
-/*  54 */           ActivityRevelryHandler.RevelryColumnInfo.Builder columnInfo = ActivityRevelryHandler.RevelryColumnInfo.newBuilder();
-/*  55 */           columnInfo.setId(column.getId());
-/*  56 */           columnInfo.setName(column.getName());
-/*  57 */           columnInfo.setLabel(column.getLabel());
-/*  58 */           columnInfo.setGoto1(column.getGoto1());
-/*  59 */           columnInfo.setGoto2(column.getGoto2());
-/*  60 */           columnInfo.setTip(column.getTip());
-/*  61 */           todayInfo.addColumn(columnInfo);
-/*     */         } 
-/*     */         
-/*  64 */         tabInfo.addToday(todayInfo);
-/*  65 */         if (((RevelryToday)e.getValue()).getTimeleft() < timeleft) {
-/*  66 */           timeleft = ((RevelryToday)e.getValue()).getTimeleft();
-/*  67 */           defaultSeleteIndex = tabInfo.getTodayCount();
-/*     */         } 
-/*     */       } 
-/*     */       
-/*  71 */       result.setSelectedIndex(defaultSeleteIndex);
-/*  72 */       result.addInfo(tabInfo);
-/*     */     } 
-/*     */ 
-/*     */     
-/*  76 */     for (Map.Entry<Integer, KingCO> e : (Iterable<Map.Entry<Integer, KingCO>>)GameData.Kings.entrySet()) {
-/*  77 */       if (((KingCO)e.getValue()).isOpen == 0) {
-/*     */         continue;
-/*     */       }
-/*  80 */       KingCO template = e.getValue();
-/*  81 */       ActivityRevelryHandler.KingExchange.Builder exchange = ActivityRevelryHandler.KingExchange.newBuilder();
-/*  82 */       exchange.setTabId(template.tabID);
-/*  83 */       exchange.setTabName(template.tabName);
-/*     */       
-/*  85 */       exchange.setItem1Code(template.item1code);
-/*  86 */       exchange.setItem1Num(template.num1);
-/*     */       
-/*  88 */       exchange.setItem2Code(template.item2code);
-/*  89 */       exchange.setItem2Num(template.num2);
-/*     */       
-/*  91 */       exchange.setAvatarId(template.avatarId);
-/*  92 */       exchange.setTip(template.activityDesc);
-/*  93 */       exchange.setShowType(template.showType);
-/*     */       
-/*  95 */       result.addExchange(exchange);
-/*     */     } 
-/*     */     
-/*  98 */     return new PomeloResponse()
-/*     */       {
-/*     */         protected void write() throws IOException {
-/* 101 */           result.setS2CCode(200);
-/* 102 */           this.body.writeBytes(result.build().toByteArray());
-/*     */         }
-/*     */       };
-/*     */   }
-/*     */ }
+package com.wanniu.game.request.revelry;
+
+import com.wanniu.core.game.LangService;
+import com.wanniu.core.game.entity.GClientEvent;
+import com.wanniu.core.game.protocol.PomeloRequest;
+import com.wanniu.core.game.protocol.PomeloResponse;
+import com.wanniu.game.common.msg.ErrorResponse;
+import com.wanniu.game.data.GameData;
+import com.wanniu.game.data.KingCO;
+import com.wanniu.game.revelry.RevelryClass;
+import com.wanniu.game.revelry.RevelryColumn;
+import com.wanniu.game.revelry.RevelryManager;
+import com.wanniu.game.revelry.RevelryToday;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import pomelo.revelry.ActivityRevelryHandler;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\request\revelry\RevelryGetColumnHandler.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+@GClientEvent("revelry.activityRevelryHandler.revelryGetColumnRequest")
+public class RevelryGetColumnHandler
+        extends PomeloRequest {
+    public PomeloResponse request() throws Exception {
+        final ActivityRevelryHandler.RevelryGetColumnResponse.Builder result = ActivityRevelryHandler.RevelryGetColumnResponse.newBuilder();
+
+        List<RevelryClass> revelryClassList = RevelryManager.getInstance().getRevelryClassList();
+        if (revelryClassList.isEmpty()) {
+            return (PomeloResponse) new ErrorResponse(LangService.getValue("PARAM_ERROR"));
+        }
+
+
+        for (RevelryClass revelryClass : revelryClassList) {
+            ActivityRevelryHandler.RevelryTabInfo.Builder tabInfo = ActivityRevelryHandler.RevelryTabInfo.newBuilder().setName(revelryClass.getName());
+
+            int defaultSeleteIndex = 0;
+            long timeleft = 2147483647L;
+
+            for (Map.Entry<String, RevelryToday> e : (Iterable<Map.Entry<String, RevelryToday>>) revelryClass.getTodays().entrySet()) {
+                ActivityRevelryHandler.RevelryTodayInfo.Builder todayInfo = ActivityRevelryHandler.RevelryTodayInfo.newBuilder().setName(((RevelryToday) e.getValue()).getName());
+
+
+                for (RevelryColumn column : ((RevelryToday) e.getValue()).getColumns()) {
+                    ActivityRevelryHandler.RevelryColumnInfo.Builder columnInfo = ActivityRevelryHandler.RevelryColumnInfo.newBuilder();
+                    columnInfo.setId(column.getId());
+                    columnInfo.setName(column.getName());
+                    columnInfo.setLabel(column.getLabel());
+                    columnInfo.setGoto1(column.getGoto1());
+                    columnInfo.setGoto2(column.getGoto2());
+                    columnInfo.setTip(column.getTip());
+                    todayInfo.addColumn(columnInfo);
+                }
+
+                tabInfo.addToday(todayInfo);
+                if (((RevelryToday) e.getValue()).getTimeleft() < timeleft) {
+                    timeleft = ((RevelryToday) e.getValue()).getTimeleft();
+                    defaultSeleteIndex = tabInfo.getTodayCount();
+                }
+            }
+
+            result.setSelectedIndex(defaultSeleteIndex);
+            result.addInfo(tabInfo);
+        }
+
+
+        for (Map.Entry<Integer, KingCO> e : (Iterable<Map.Entry<Integer, KingCO>>) GameData.Kings.entrySet()) {
+            if (((KingCO) e.getValue()).isOpen == 0) {
+                continue;
+            }
+            KingCO template = e.getValue();
+            ActivityRevelryHandler.KingExchange.Builder exchange = ActivityRevelryHandler.KingExchange.newBuilder();
+            exchange.setTabId(template.tabID);
+            exchange.setTabName(template.tabName);
+
+            exchange.setItem1Code(template.item1code);
+            exchange.setItem1Num(template.num1);
+
+            exchange.setItem2Code(template.item2code);
+            exchange.setItem2Num(template.num2);
+
+            exchange.setAvatarId(template.avatarId);
+            exchange.setTip(template.activityDesc);
+            exchange.setShowType(template.showType);
+
+            result.addExchange(exchange);
+        }
+
+        return new PomeloResponse() {
+            protected void write() throws IOException {
+                result.setS2CCode(200);
+                this.body.writeBytes(result.build().toByteArray());
+            }
+        };
+    }
+}
+
+

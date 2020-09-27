@@ -9,10 +9,7 @@ import java.lang.annotation.Target;
 @Inherited
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Service {}
+public @interface Service {
+}
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\common\Service.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */

@@ -1,24 +1,19 @@
-/*    */ package com.wanniu.game.data;
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ 
-/*    */ public class CharacterLevelCO
-/*    */ {
-/*    */   public int level;
-/*    */   public int experience;
-/*    */   
-/*    */   public int getKey() {
-/* 12 */     return this.level;
-/*    */   }
-/*    */   
-/*    */   public void initProperty() {}
-/*    */   
-/*    */   public void beforeProperty() {}
-/*    */ }
+package com.wanniu.game.data;
 
 
-/* Location:              D:\Yxdl\xmds-server\mmoarpg-game.jar!\com\wanniu\game\data\CharacterLevelCO.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version:       1.1.3
- */
+public class CharacterLevelCO {
+    public int level;
+    public int experience;
+
+    public int getKey() {
+        return this.level;
+    }
+
+    public void initProperty() {
+    }
+
+    public void beforeProperty() {
+    }
+}
+
+
